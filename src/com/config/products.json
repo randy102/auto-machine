@@ -1,0 +1,7 @@
+{
+  "products": [
+    {"label": "Coke (10.000 VND)", "price": 10000, "key": "1"},
+    {"label": "Pepsi (10.000 VND)", "price": 10000, "key":  "2"},
+    {"label": "Soda (20.000 VND)", "price": 20000, "key":  "3"}
+  ]
+}

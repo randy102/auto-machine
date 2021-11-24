@@ -1,0 +1,9 @@
+{
+  "budget": 50000,
+  "consecutiveCount": 3,
+  "promotionProbabilityPercent": 10.0,
+  "increaseRate": 50,
+  "currentDate": null,
+  "usedBudget": 0,
+  "purchasedList": []
+}

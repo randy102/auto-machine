@@ -1,0 +1,6 @@
+{
+  "confirmation": [
+    {"label": "Yes", "key": "yes"},
+    {"label": "No", "key": "no"}
+  ]
+}
