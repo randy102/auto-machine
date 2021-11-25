@@ -45,11 +45,11 @@ public class Option<Record extends Displayable> {
 
     public Answer<Record> get() {
         if (this.records == null || this.records.size() == 0) {
-            System.out.println("No options!");
+            Screen.writeln("No options!");
             return null;
         }
 
-        System.out.println(title);
+        Screen.writeln(title);
         this.printOptions();
 
         int input = this.getInput();
@@ -61,16 +61,16 @@ public class Option<Record extends Displayable> {
 
     private void printOptions() {
         for (int i = 1; i <= this.records.size(); i++) {
-            System.out.println(i + ": " + this.records.get(i - 1).label());
+            Screen.writeln(i + ": " + this.records.get(i - 1).label());
         }
         if (backOption)
-            System.out.println((this.records.size() + 1) + ": Cancel");
+            Screen.writeln((this.records.size() + 1) + ": Cancel");
     }
 
     private int getInput() {
         String input;
         do {
-            System.out.print("Your option: ");
+            Screen.write("Your option: ");
             input = Scanner.get();
         } while (!isValidInput(input));
         return Integer.parseInt(input) - 1;

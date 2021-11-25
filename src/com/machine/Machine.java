@@ -38,7 +38,7 @@ public class Machine {
     }
 
     private void printFundInfo() {
-        fund.printFundInfo();
+        Screen.writeln("Current funds: " + fund.getTotal());
     }
 
     private boolean confirmContinue() {
@@ -87,7 +87,7 @@ public class Machine {
         window.show(new WindowHandler<Product>() {
             @Override
             public void beforeInput() {
-                fund.printFundInfo();
+                printFundInfo();
             }
 
             @Override
@@ -121,11 +121,12 @@ public class Machine {
 
     private boolean releaseProduct(Product product) {
         if (product.price() > fund.getTotal()) {
-            System.out.println("Not enough fund to purchase!");
+            Screen.writeln("Not enough fund to purchase!");
             return false;
         }
-        System.out.println("Releasing " + product.label() + "...");
-        System.out.println("Done! Enjoy your drink!");
+        Screen.clear();
+        Screen.writeln("Releasing " + product.label() + "...");
+        Screen.writeln("Done! Enjoy your drink!");
         fund.debit(product.price());
         return true;
     }

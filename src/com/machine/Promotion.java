@@ -7,7 +7,6 @@ import com.utils.Screen;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 

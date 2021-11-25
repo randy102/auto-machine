@@ -35,9 +35,4 @@ public class Fund {
     public long getTotal() {
         return total;
     }
-
-
-    public void printFundInfo() {
-        Screen.writeln("Current funds: " + getTotal());
-    }
 }
