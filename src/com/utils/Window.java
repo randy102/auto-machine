@@ -40,7 +40,6 @@ public class Window<Record extends Displayable> {
                 handler.onCancel();
                 break;
             }
-            ;
             if (!handler.onInput(answer.get())) break;
         }
 

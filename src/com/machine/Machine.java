@@ -84,17 +84,24 @@ public class Machine {
 
     public void pickProduct() {
         Window<Product> window = new Window<>(productOption);
+        String[] errors = {null};
         window.show(new WindowHandler<Product>() {
             @Override
             public void beforeInput() {
                 printFundInfo();
+                if(errors[0] != null){
+                    Screen.writeln(errors[0]);
+                    errors[0] = null;
+                }
             }
 
             @Override
             public boolean onInput(Product product) {
-                boolean success = releaseProduct(product);
-                if (!success) return true;
-
+                if (product.price() > fund.getTotal()) {
+                    errors[0] = "Not enough fund to purchase!";
+                    return true;
+                }
+                releaseProduct(product);
                 promotion.apply(product);
                 releaseChange();
                 return false;
@@ -120,15 +127,10 @@ public class Machine {
         }
     }
 
-    private boolean releaseProduct(Product product) {
-        if (product.price() > fund.getTotal()) {
-            Screen.writeln("Not enough fund to purchase!");
-            return false;
-        }
+    private void releaseProduct(Product product) {
         Screen.clear();
         Screen.writeln("Releasing " + product.label() + "...");
         Screen.writeln("Done! Enjoy your drink!");
         fund.debit(product.price());
-        return true;
     }
 }
