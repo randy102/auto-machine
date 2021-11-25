@@ -19,7 +19,8 @@ public class Promotion {
     private double promotionProbabilityPercent;
     private final long increaseRate;
     private String currentDate;
-    private final List<String> purchasedList = new ArrayList<>();
+    private String lastPurchased;
+    private long currentConsecutivePurchased;
 
     private final String DATA_KEY = "promotion";
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
@@ -32,36 +33,34 @@ public class Promotion {
         promotionProbabilityPercent = (double) json.get("promotionProbabilityPercent");
         increaseRate = (long) json.get("increaseRate");
         currentDate = (String) json.get("currentDate");
-
-        JSONArray purchaseArray = (JSONArray) json.get("purchasedList");
-        for (Object o : purchaseArray) {
-            purchasedList.add((String) o);
-        }
+        lastPurchased = (String) json.get("lastPurchased");
+        currentConsecutivePurchased = (long) json.get("currentConsecutivePurchased");
     }
 
     public void apply(Product product) {
         updateDailyData();
 
-        if (product.price() > budget - usedBudget) return;
+        boolean budgetExceeded = product.price() > budget - usedBudget;
+        if (budgetExceeded) return;
 
-        if (purchasedList.isEmpty()) {
-            purchasedList.add(product.key());
+        if (currentConsecutivePurchased == 0) {
+            lastPurchased = product.key();
+            currentConsecutivePurchased += 1;
             saveData();
             return;
         }
 
-        String lastKey = purchasedList.get(purchasedList.size() - 1);
-        boolean sameProduct = product.key().equals(lastKey);
-        if (!sameProduct) {
-            purchasedList.clear();
-            purchasedList.add(product.key());
+        boolean differentThanLastPurchased = !product.key().equals(lastPurchased);
+        if (differentThanLastPurchased) {
+            currentConsecutivePurchased = 1;
+            lastPurchased = product.key();
             saveData();
             return;
         }
 
-        boolean enoughPurchaseCount = purchasedList.size() >= consecutiveCount - 1;
-        if (!enoughPurchaseCount) {
-            purchasedList.add(product.key());
+        boolean unsatisfiedConsecutiveCount = currentConsecutivePurchased < consecutiveCount - 1;
+        if (unsatisfiedConsecutiveCount) {
+            currentConsecutivePurchased += 1;
             saveData();
             return;
         }
@@ -69,7 +68,7 @@ public class Promotion {
         if (isWin()) {
             Screen.writeln("Congratulation! You get a free " + product.label());
             usedBudget += product.price();
-            purchasedList.clear();
+            currentConsecutivePurchased = 0;
             saveData();
         }
     }
@@ -89,9 +88,8 @@ public class Promotion {
         object.put("promotionProbabilityPercent", promotionProbabilityPercent);
         object.put("increaseRate", increaseRate);
         object.put("currentDate", currentDate);
-        JSONArray purchaseArray = new JSONArray();
-        purchaseArray.addAll(purchasedList);
-        object.put("purchasedList", purchaseArray);
+        object.put("currentConsecutivePurchased", currentConsecutivePurchased);
+        object.put("lastPurchased", lastPurchased);
         JSONWriter.writeData(DATA_KEY, object);
     }
 
@@ -102,11 +100,16 @@ public class Promotion {
         }
         if (today.equals(currentDate)) return;
 
-        if (usedBudget < budget) {
-            promotionProbabilityPercent = min(promotionProbabilityPercent * (1 + increaseRate / 100.0), 99);
+        boolean yesterdayBudgetNotReached = usedBudget < budget;
+        if (yesterdayBudgetNotReached) {
+            increaseWinProbability();
         }
         usedBudget = 0;
         currentDate = today;
+    }
+
+    private void increaseWinProbability(){
+        promotionProbabilityPercent = min(promotionProbabilityPercent * (1 + increaseRate / 100.0), 99);
     }
 
 }

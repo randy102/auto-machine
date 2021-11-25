@@ -109,6 +109,7 @@ public class Machine {
 
     private void refund() {
         if (fund.getTotal() > 0) {
+            Screen.clear();
             Screen.writeln("Please take your refund: " + fund.refund());
         }
     }

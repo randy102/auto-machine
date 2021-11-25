@@ -1,1 +1,10 @@
-{"consecutiveCount":3,"promotionProbabilityPercent":10.0,"usedBudget":0,"currentDate":"25-11-2021","increaseRate":50,"purchasedList":["1"],"budget":50000}
+{
+  "budget": 50000,
+  "consecutiveCount": 3,
+  "promotionProbabilityPercent": 10.0,
+  "increaseRate": 50,
+  "currentDate": null,
+  "usedBudget": 0,
+  "lastPurchased": null,
+  "currentConsecutivePurchased": 0
+}
